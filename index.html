@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story Teller - My Twine Games</title>
+    <style>
+        /* CSS VARIABLES */
+        :root {
+            --bg-dark: #0d0d12;
+            --bg-card: rgba(26, 26, 36, 0.6);
+            --purple: #8A2BE2;
+            --turquoise: #40E0D0;
+            --text-light: #e0e0e0;
+            --text-muted: #a0a0a0;
+        }
+
+        /* GLOBAL STYLES */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* BACKGROUND ANIMATION (Aurora / Floating Orbs) */
+        .bg-animation {
+            position: fixed;
+            top: 0; left: 0; 
+            width: 100vw; height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            background-color: var(--bg-dark);
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.5;
+            animation: float 20s infinite alternate ease-in-out;
+            will-change: transform;
+        }
+
+        .orb-1 {
+            width: 50vw; height: 50vw;
+            background: var(--purple);
+            top: -10%; left: -10%;
+        }
+
+        .orb-2 {
+            width: 60vw; height: 60vw;
+            background: var(--turquoise);
+            bottom: -20%; right: -10%;
+            animation-delay: -5s;
+            animation-duration: 25s;
+        }
+
+        .orb-3 {
+            width: 40vw; height: 40vw;
+            background: #2a1b54;
+            top: 30%; left: 30%;
+            animation-delay: -10s;
+            animation-duration: 30s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(10vw, 15vh) scale(1.1); }
+            100% { transform: translate(-10vw, 10vh) scale(0.9); }
+        }
+
+        /* HEADER & TITLE */
+        header {
+            text-align: center;
+            padding: 50px 20px 20px;
+        }
+
+        h1 {
+            font-size: 4rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        .anim-story {
+            background: linear-gradient(90deg, var(--turquoise), var(--purple), var(--turquoise));
+            background-size: 200% auto;
+            color: #fff;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 3s linear infinite;
+            display: inline-block;
+            text-shadow: 0px 0px 20px rgba(138, 43, 226, 0.4);
+        }
+
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+
+        .teller {
+            color: var(--text-light);
+        }
+
+        /* MAIN LAYOUT */
+        main {
+            flex: 1;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 40px;
+            color: var(--turquoise);
+            border-bottom: 2px solid var(--purple);
+            display: inline-block;
+            padding-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .title-container {
+            text-align: center;
+        }
+
+        /* GRID SYSTEM: 2 COLUMNS (2x2 layout for 4 items) */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px; 
+        }
+
+        @media (max-width: 768px) {
+            .grid-container { grid-template-columns: 1fr; }
+            h1 { font-size: 2.5rem; }
+            .card { height: 400px; }
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 500px; 
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(64, 224, 208, 0.4);
+        }
+
+        .card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .card:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Black Transparent Gradient Banner */
+        .card-banner {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.5) 60%, rgba(0, 0, 0, 0) 100%);
+            color: #fff;
+            padding: 60px 20px 20px 20px;
+            text-align: center;
+            font-size: 1.6rem;
+            font-weight: bold;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.8);
+        }
+
+        .card:hover .card-banner {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+
+        /* --- DISABLED CARD STYLES --- */
+        .card.disabled-card {
+            cursor: not-allowed;
+            filter: grayscale(70%) opacity(0.6); /* Makes the card look dim/inactive */
+        }
+
+        /* Remove card float & shadow change on hover */
+        .card.disabled-card:hover {
+            transform: translateY(0);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6); 
+        }
+
+        /* Prevent image from zooming on hover */
+        .card.disabled-card:hover img {
+            transform: scale(1);
+        }
+
+        /* Prevent banner from disappearing on hover */
+        .card.disabled-card:hover .card-banner {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        /* --------------------------- */
+
+        /* GAME SUB-SITE SECTION */
+        #game-page {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .btn-back {
+            background: none;
+            border: none;
+            color: var(--turquoise);
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: color 0.2s, text-shadow 0.2s;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
+
+        .btn-back:hover {
+            color: var(--purple);
+            text-shadow: 0 2px 10px rgba(138, 43, 226, 0.8);
+        }
+
+        .game-title {
+            font-size: 3rem;
+            color: var(--text-light);
+            margin-bottom: 20px;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.7);
+        }
+
+        /* Game Container */
+        .game-wrapper {
+            position: relative;
+            width: 100%;
+            height: 650px;
+            background: #000;
+            border: 2px solid var(--purple);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        .game-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: none;
+        }
+
+        /* Play Overlay */
+        .play-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(rgba(13, 13, 18, 0.7), rgba(13, 13, 18, 0.9)), url('https://picsum.photos/1200/800') center/cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .btn-play {
+            background-color: var(--turquoise);
+            color: var(--bg-dark);
+            border: none;
+            padding: 20px 50px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 0 20px var(--turquoise);
+        }
+
+        .btn-play:hover {
+            background-color: var(--purple);
+            color: #fff;
+            box-shadow: 0 0 30px var(--purple);
+            transform: scale(1.05);
+        }
+
+        .btn-maximize {
+            background-color: rgba(0,0,0,0.5);
+            color: var(--text-light);
+            border: 1px solid var(--purple);
+            padding: 10px 20px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background 0.3s;
+            display: block;
+            margin-bottom: 30px;
+        }
+
+        .btn-maximize:hover {
+            background-color: var(--purple);
+        }
+
+        .game-description {
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 5px solid var(--turquoise);
+            line-height: 1.8;
+            font-size: 1.1rem;
+            color: var(--text-light);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+        }
+
+        /* FOOTER & SOCIALS */
+        footer {
+            background-color: var(--bg-card);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            text-align: center;
+            margin-top: 50px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 25px;
+            margin-bottom: 15px;
+            flex-wrap: wrap; /* Allows them to stack neatly on tiny screens */
+        }
+
+        .social-icon {
+            fill: var(--text-muted);
+            color: var(--text-muted);
+            width: 35px;
+            height: 35px;
+            transition: fill 0.3s ease, color 0.3s ease, transform 0.3s ease, filter 0.3s ease;
+            cursor: pointer;
+        }
+
+        .social-icon:hover {
+            fill: var(--turquoise);
+            color: var(--turquoise);
+            transform: translateY(-5px);
+            filter: drop-shadow(0 0 10px var(--turquoise));
+        }
+        
+        .game-wrapper:fullscreen { border: none; border-radius: 0; }
+    </style>
+</head>
+<body>
+
+    <!-- CSS BACKGROUND ANIMATION -->
+    <div class="bg-animation">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <header>
+        <h1><span class="anim-story">Story</span> <span class="teller">Teller</span></h1>
+    </header>
+
+    <main>
+        <!-- HOME PAGE (GRID) -->
+        <div id="home-page">
+            <div class="title-container">
+                <h2 class="section-title">Try My Games</h2>
+            </div>
+            
+            <div class="grid-container" id="games-grid">
+                <!-- Cards injected via JavaScript -->
+            </div>
+        </div>
+
+        <!-- GAME SUB-SITE -->
+        <div id="game-page">
+            <button class="btn-back" onclick="goBack()">← Back to Games</button>
+            <h1 class="game-title" id="display-title">Game Title</h1>
+            
+            <div class="game-wrapper" id="game-wrapper">
+                <div class="play-overlay" id="play-overlay">
+                    <button class="btn-play" onclick="playGame()">▶ Play Game</button>
+                </div>
+                <iframe class="game-iframe" id="game-iframe" src="" allowfullscreen></iframe>
+            </div>
+            
+            <button class="btn-maximize" onclick="toggleFullscreen()">⛶ Maximize</button>
+
+            <div class="game-description" id="display-desc">
+                Description goes here.
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER WITH SOCIALS -->
+    <footer>
+        <div class="social-links">
+            <!-- Twitter/X Logo -->
+            <a href="https://x.com/StoryTeller0Dev" target="_blank" title="Twitter">
+                <svg class="social-icon" viewBox="0 0 24 24">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+            </a>
+            
+            <!-- Reddit Logo -->
+            <a href="https://www.reddit.com/user/Crafty-Week7279/" target="_blank" title="Reddit">
+                <svg class="social-icon" viewBox="0 0 24 24">
+                    <path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.688-.561-1.25-1.25-1.25zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/>
+                </svg>
+            </a>
+            
+            <!-- Itch.io Logo -->
+            <a href="https://storyteller0.itch.io/first-time" target="_blank" title="Itch.io">
+                <svg class="social-icon" viewBox="0 0 24 24">
+                    <path d="M4.606 5.86c-.958 0-1.638.653-1.638 1.63v.231c0 .976.68 1.629 1.638 1.629.957 0 1.638-.653 1.638-1.63v-.23c0-.977-.68-1.63-1.638-1.63zm3.682 0c-.958 0-1.638.653-1.638 1.63v.231c0 .976.68 1.629 1.638 1.629.958 0 1.638-.653 1.638-1.63v-.23c0-.977-.68-1.63-1.638-1.63zm3.681 0c-.957 0-1.638.653-1.638 1.63v.231c0 .976.68 1.629 1.638 1.629.957 0 1.637-.653 1.637-1.63v-.23c0-.977-.68-1.63-1.637-1.63zm3.682 0c-.958 0-1.638.653-1.638 1.63v.231c0 .976.68 1.629 1.638 1.629.957 0 1.637-.653 1.637-1.63v-.23c0-.977-.68-1.63-1.637-1.63zM2.843 1.25L1.574 4.093v4.614l1.67 1.622v9.394c0 1.05.863 1.91 1.912 1.91h13.686c1.05 0 1.914-.86 1.914-1.91v-9.394l1.67-1.622V4.093L19.157 1.25H2.843zM10.99 15.688c2.474 0 4.103-1.325 5.094-2.825l-1.378-1.025c-.868 1.218-1.905 1.993-3.716 1.993-1.81 0-2.848-.775-3.715-1.993l-1.379 1.025c.99 1.5 2.62 2.825 5.094 2.825z"/>
+                </svg>
+            </a>
+
+            <!-- Patreon Logo -->
+            <a href="https://www.patreon.com/c/StoryTeller0" target="_blank" title="Patreon">
+                <svg class="social-icon" viewBox="0 0 24 24">
+                    <path d="M0 .48v23.04h7.32V.48H0zm16.08 0c-4.44 0-8.04 3.6-8.04 8.04 0 4.44 3.6 8.04 8.04 8.04 4.44 0 8.04-3.6 8.04-8.04 0-4.44-3.6-8.04-8.04-8.04z"/>
+                </svg>
+            </a>
+
+            <!-- SubscribeStar Logo -->
+            <a href="https://subscribestar.adult/storyteller0" target="_blank" title="SubscribeStar">
+                <svg class="social-icon" viewBox="0 0 24 24">
+                    <path d="M12 1.5l3.09 6.3 6.91 1-5 4.87 1.18 6.88-6.18-3.25-6.18 3.25 1.18-6.88-5-4.87 6.91-1L12 1.5z"/>
+                </svg>
+            </a>
+
+            <!-- F95Zone -->
+            <a href="https://f95zone.to/threads/first-time-v0-2-storyteller0.297652/" target="_blank" title="F95Zone" style="text-decoration: none;">
+                <svg class="social-icon" viewBox="0 0 24 24">
+                    <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-family="Arial, sans-serif" font-weight="900" font-size="11" fill="currentColor">F95</text>
+                </svg>
+            </a>
+        </div>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">© 2024 Story Teller Games. All rights reserved.</p>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // NOTE the "disabled: true" flag on the last three games!
+        const gamesData = [
+            {
+                id: 1,
+                title: "First Time",
+                desc: "First Time is a choice-driven Twine visual novel where you explore six unique scenarios that each lead to a different romantic and intimate experience. Every route features different characters, situations, tones, and outcomes — putting you in control of how your story unfolds.",
+                img: "https://images.unsplash.com/photo-1555680202-c86f0e12f086?auto=format&fit=crop&w=800&q=80",
+                url: "about:blank" 
+            },
+            {
+                id: 2,
+                title: "Echoes of the Void",
+                desc: "Trapped on a derelict space station, you must piece together what happened to the crew before the life support fails. A thrilling sci-fi horror Twine experience.",
+                img: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=800&q=80",
+                url: "about:blank",
+                disabled: true
+            },
+            {
+                id: 3,
+                title: "Crimson Manor",
+                desc: "A Gothic murder mystery set in the 1800s. Explore the dark halls of Crimson Manor, interview suspects, and gather clues. Will you solve the mystery, or become the next victim?",
+                img: "https://images.unsplash.com/photo-1505635552518-3448ff116af3?auto=format&fit=crop&w=800&q=80",
+                url: "about:blank",
+                disabled: true
+            },
+            {
+                id: 4,
+                title: "The Dream Walker",
+                desc: "Dive into the surreal landscapes of human dreams. As a Dream Walker, you cure nightmares by venturing directly into them. Fantasy, magic, and beautiful imagery await.",
+                img: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80",
+                url: "about:blank",
+                disabled: true
+            }
+        ];
+
+        const homePage = document.getElementById('home-page');
+        const gamePage = document.getElementById('game-page');
+        const gamesGrid = document.getElementById('games-grid');
+        
+        const displayTitle = document.getElementById('display-title');
+        const displayDesc = document.getElementById('display-desc');
+        const gameIframe = document.getElementById('game-iframe');
+        const playOverlay = document.getElementById('play-overlay');
+
+        function renderCards() {
+            gamesData.forEach(game => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                
+                // If game has "disabled: true", don't add click handler and add the disabled CSS class
+                if (game.disabled) {
+                    card.classList.add('disabled-card');
+                    card.innerHTML = `
+                        <img src="${game.img}" alt="${game.title}">
+                        <div class="card-banner">
+                            ${game.title}<br>
+                            <span style="font-size: 0.9rem; color: var(--turquoise); opacity: 0.8; font-weight: normal;">(Coming Soon)</span>
+                        </div>
+                    `;
+                } else {
+                    card.onclick = () => openGame(game);
+                    card.innerHTML = `
+                        <img src="${game.img}" alt="${game.title}">
+                        <div class="card-banner">${game.title}</div>
+                    `;
+                }
+                
+                gamesGrid.appendChild(card);
+            });
+        }
+
+        function openGame(game) {
+            homePage.style.display = 'none';
+            gamePage.style.display = 'block';
+            window.scrollTo(0, 0);
+
+            displayTitle.innerText = game.title;
+            displayDesc.innerText = game.desc;
+            
+            gameIframe.src = game.url;
+            
+            playOverlay.style.display = 'flex';
+            gameIframe.style.display = 'none';
+        }
+
+        function playGame() {
+            playOverlay.style.display = 'none';
+            gameIframe.style.display = 'block';
+        }
+
+        function goBack() {
+            gamePage.style.display = 'none';
+            homePage.style.display = 'block';
+            gameIframe.src = ""; 
+        }
+
+        function toggleFullscreen() {
+            const wrapper = document.getElementById('game-wrapper');
+            
+            if (!document.fullscreenElement) {
+                if (wrapper.requestFullscreen) {
+                    wrapper.requestFullscreen();
+                } else if (wrapper.webkitRequestFullscreen) {
+                    wrapper.webkitRequestFullscreen();
+                } else if (wrapper.msRequestFullscreen) {
+                    wrapper.msRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+            }
+        }
+
+        window.onload = renderCards;
+    </script>
+</body>
+</html>
