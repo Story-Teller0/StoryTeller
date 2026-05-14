@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Story Teller - My Twine Games</title>
     <link rel="icon" type="image/png" href="favicon.png">
+    <meta property="og:title" content="Story Teller - My Twine Games">
+    <meta property="og:description" content="Play choice-driven visual novels and interactive fiction games by Story Teller.">
+    <meta property="og:image" content="https://yourwebsite.com/images/logo.png">
+    <meta name="twitter:card" content="summary_large_image">
     <style>
         /* CSS VARIABLES */
         :root {
@@ -91,6 +95,26 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             text-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        /* FULLSCREEN WARNING STYLES */
+        .fullscreen-warning {
+            color: #ffffff; /* Makes the rest of the text white */
+            font-size: 1.1rem;
+            margin-top: -20px; /* Pulls the text up closer to the title */
+            margin-bottom: 40px; /* Adds space before the game cards */
+            letter-spacing: 0.5px;
+        }
+
+        .warn-red {
+            color: #ff3333; /* A bright, readable red */
+            font-weight: bold;
+        }
+
+        .warn-orange {
+            color: #ffaa00; /* A nice neon-ish orange */
+            text-decoration: underline;
+            font-weight: bold;
         }
 
         .anim-story {
@@ -395,8 +419,10 @@
         <div id="home-page">
             <div class="title-container">
                 <h2 class="section-title">Try My Games</h2>
+                <p class="fullscreen-warning">
+                    <span class="warn-red">WARNING:</span> It is <span class="warn-orange">HIGHLY</span> recommended that you play my games in "Fullscreen" mode.
+                </p>
             </div>
-            
             <div class="grid-container" id="games-grid">
                 <!-- Cards injected via JavaScript -->
             </div>
@@ -426,42 +452,42 @@
     <footer>
         <div class="social-links">
             <!-- Twitter/X Logo -->
-            <a href="https://x.com/StoryTeller0Dev" target="_blank" title="Twitter">
+            <a href="https://x.com/StoryTeller0Dev" target="_blank" aria-label="Twitter" title="Twitter">
                 <svg class="social-icon" viewBox="0 0 24 24">
                     <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                 </svg>
             </a>
             
             <!-- Reddit Logo -->
-            <a href="https://www.reddit.com/user/Crafty-Week7279/" target="_blank" title="Reddit">
+            <a href="https://www.reddit.com/user/Crafty-Week7279/" target="_blank" aria-label="Reddit" title="Reddit">
                 <svg class="social-icon" viewBox="0 0 24 24">
                     <path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.688-.561-1.25-1.25-1.25zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/>
                 </svg>
             </a>
             
             <!-- Itch.io Logo -->
-            <a href="https://storyteller0.itch.io/first-time" target="_blank" title="Itch.io">
+            <a href="https://storyteller0.itch.io/first-time" target="_blank" aria-label="Itch.io" title="Itch.io">
                 <svg class="social-icon" viewBox="0 0 24 24">
                     <path d="M4.606 5.86c-.958 0-1.638.653-1.638 1.63v.231c0 .976.68 1.629 1.638 1.629.957 0 1.638-.653 1.638-1.63v-.23c0-.977-.68-1.63-1.638-1.63zm3.682 0c-.958 0-1.638.653-1.638 1.63v.231c0 .976.68 1.629 1.638 1.629.958 0 1.638-.653 1.638-1.63v-.23c0-.977-.68-1.63-1.638-1.63zm3.681 0c-.957 0-1.638.653-1.638 1.63v.231c0 .976.68 1.629 1.638 1.629.957 0 1.637-.653 1.637-1.63v-.23c0-.977-.68-1.63-1.637-1.63zm3.682 0c-.958 0-1.638.653-1.638 1.63v.231c0 .976.68 1.629 1.638 1.629.957 0 1.637-.653 1.637-1.63v-.23c0-.977-.68-1.63-1.637-1.63zM2.843 1.25L1.574 4.093v4.614l1.67 1.622v9.394c0 1.05.863 1.91 1.912 1.91h13.686c1.05 0 1.914-.86 1.914-1.91v-9.394l1.67-1.622V4.093L19.157 1.25H2.843zM10.99 15.688c2.474 0 4.103-1.325 5.094-2.825l-1.378-1.025c-.868 1.218-1.905 1.993-3.716 1.993-1.81 0-2.848-.775-3.715-1.993l-1.379 1.025c.99 1.5 2.62 2.825 5.094 2.825z"/>
                 </svg>
             </a>
 
             <!-- Patreon Logo -->
-            <a href="https://www.patreon.com/c/StoryTeller0" target="_blank" title="Patreon">
+            <a href="https://www.patreon.com/c/StoryTeller0" target="_blank" aria-label="Patreon" title="Patreon">
                 <svg class="social-icon" viewBox="0 0 24 24">
                     <path d="M0 .48v23.04h7.32V.48H0zm16.08 0c-4.44 0-8.04 3.6-8.04 8.04 0 4.44 3.6 8.04 8.04 8.04 4.44 0 8.04-3.6 8.04-8.04 0-4.44-3.6-8.04-8.04-8.04z"/>
                 </svg>
             </a>
 
             <!-- SubscribeStar Logo -->
-            <a href="https://subscribestar.adult/storyteller0" target="_blank" title="SubscribeStar">
+            <a href="https://subscribestar.adult/storyteller0" target="_blank" aria-label="SubscribeStar" title="SubscribeStar">
                 <svg class="social-icon" viewBox="0 0 24 24">
                     <path d="M12 1.5l3.09 6.3 6.91 1-5 4.87 1.18 6.88-6.18-3.25-6.18 3.25 1.18-6.88-5-4.87 6.91-1L12 1.5z"/>
                 </svg>
             </a>
 
             <!-- F95Zone -->
-            <a href="https://f95zone.to/threads/first-time-v0-2-storyteller0.297652/" target="_blank" title="F95Zone" style="text-decoration: none;">
+            <a href="https://f95zone.to/threads/first-time-v0-2-storyteller0.297652/" target="_blank" aria-label="F95Zone" title="F95Zone" style="text-decoration: none;">
                 <svg class="social-icon" viewBox="0 0 24 24">
                     <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-family="Arial, sans-serif" font-weight="900" font-size="11" fill="currentColor">F95</text>
                 </svg>
